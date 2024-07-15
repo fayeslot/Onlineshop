@@ -1,0 +1,45 @@
+{% extends "eccomerce/base.html" %}
+{% block content %}
+
+    <div>
+        <div>
+        <!-- check if there is a result in the database-->
+        {% if posts %}
+            <!-- loop through search query if there is a result -->
+            {% for post in posts %}
+                
+            <div class="col-lg-3 col-md-6 mb-4">
+
+                <div class="card">
+  
+                  <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                    data-mdb-ripple-color="light">
+                    <img src="{{ post.image.url }}" alt="{{ item.title }}" width="200" height="150">
+                    
+                  </div>
+  
+                  <div class="card-body">
+                    <a href="{{ post.get_absolute_url}}" class="text-reset">
+                      <h5 class="card-title mb-2">{{ post.title }}</h5>
+                    </a>
+  
+                    <strong>$
+                      
+                      {{post.price}}
+                      
+                    </strong>
+                    
+                  </div>
+  
+                </div>
+              
+              </div>
+            {% endfor %}
+            <!-- return a message if there are no results found. -->
+        {% else %}
+            <h3>No search results found</h3>
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock content %}

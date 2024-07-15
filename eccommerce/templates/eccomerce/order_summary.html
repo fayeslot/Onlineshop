@@ -1,0 +1,42 @@
+{% extends 'eccomerce/base.html' %}
+{% block content %}
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">title</th>
+        <th scope="col">quantity</th>
+        <th scope="col">price</th>
+        <th scope="col">total</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for order_item in order.product.all %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{order_item.product.title}}</td>
+            <td>{{order_item.quantity}}</td>
+            <td>{{order_item.product.price}}</td>
+            <td>{{order_item.product.price}}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5"> Your Cart is Empty</td>
+          </tr>
+          <tr>
+            <td colspan="5">
+              <a class="btn btn-primary float-right" href="{% url 'products' %}">Continue Shopping</a>
+            </td>
+          </tr>
+        {% endfor %}
+          <tr>
+            <td colspan="5" class="float-left">
+                <a class="btn btn-primary float-right" href="{% url 'products' %}">Continue Shopping</a>
+                <a class="btn btn-warning  ml-5" href="/checkout/">Proceed to Checkout</a>
+                
+            </td>
+          </tr>
+      
+    </tbody>
+  </table>
+{% endblock content %}

@@ -1,0 +1,92 @@
+{% extends "eccomerce/base.html"%}
+{% block content %}
+
+    <!--Main layout-->
+    <main class="mt-5 pt-4">
+        <div class="container mt-5">
+            <!--Grid row-->
+            <div class="row">
+                <!--Grid column-->
+                <div class="col-md-6 mb-4">
+                    <img src="{{ object.image.url }}" class="img-fluid" alt="{{ item.name }}" />
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-md-6 mb-4">
+                    <!--Content-->
+                    <div class="p-4">
+                        <div class="mb-3">
+                            <a href="">
+                                <span class="badge bg-dark me-1">{{object.get_category_display}}</span>
+                            </a>
+                        </div>
+                        {% if object.discount_price %}
+                            <strike class="lead"><span>${{object.price}}</span></strike>
+                            <p class="lead"><span>${{object.discount_price}}</span></p>
+                        {% else %}
+                            <p class="lead"><span>${{object.price}}</span></p>
+                        {% endif %}
+
+                        <strong>
+                            <p style="font-size: 20px;">{{object.description}}</p>
+                        </strong>
+                        
+                        
+                        <a href="{{object.get_add_to_cart_url}}" class="btn btn-primary ms-1">
+                            Add to cart
+                            <i class="fas fa-shopping-cart ms-1"></i>
+                        </a>
+                        <a href="{{object.get_remove_from_cart_url}}" class="btn btn-danger ms-1">
+                            Remove from cart    
+                        </a>
+                    </div>
+                    <!--Content-->
+                </div>
+                <!--Grid column-->
+            </div>
+            <!--Grid row-->
+
+            <hr />
+
+            <!--Grid row-->
+            <div class="row d-flex justify-content-center">
+                <!--Grid column-->
+                <div class="col-md-6 text-center">
+                    <h4 class="my-4 h4">Additional information</h4>
+
+                    <p>{{object.additional_info}}</p>
+                </div>
+                <!--Grid column-->
+            </div>
+            <!--Grid row-->
+
+            <!--Grid row-->
+            <div class="row">
+                <!--Grid column-->
+                <div class="col-lg-4 col-md-12 mb-4">
+                    <img src="{{object.image.url}}"
+                        class="img-fluid" alt="" />
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <img src="{{object.image.url}}"
+                        class="img-fluid" alt="" />
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <img src="{{object.image.url}}"
+                        class="img-fluid" alt="" />
+                </div>
+                <!--Grid column-->
+            </div>
+            <!--Grid row-->
+        </div>
+    </main>
+    <!--Main layout-->
+
+{% endblock content %}
