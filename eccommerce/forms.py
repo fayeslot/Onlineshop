@@ -1,15 +1,6 @@
 from django import forms 
 from django_countries.fields import CountryField 
 from django_countries.widgets import CountrySelectWidget 
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-
-class SignupForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ['email','username', 'password','password2']
-
-
 
 PAYMENT_CHOICES  = (
     ('S','Stripe'),

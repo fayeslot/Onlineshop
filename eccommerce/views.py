@@ -1,13 +1,20 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
+from django.db.models import Count,Q
 from django.shortcuts import render,redirect,get_object_or_404
 from django.utils import timezone
 from django.views.generic import ListView,DetailView,View
 from eccommerce.forms import CheckoutForm
-from eccommerce.models import Order, OrderItem, Product, BillingAddress
+from eccommerce.models import Order, OrderItem, Payment, Product, BillingAddress
+
+import stripe
+stripe.api_key = "sk_test_51Pdp9zAgq0KGXf4pUIyUVkqsuwejcTYRkYl4QCeOOiuYwqiXLCrNSbItomDIzI8HIv1rfAvyv72doAtqFBJcKQqF00ijk4p2Sm"
+
+
+
 
 # Create your views here.
 
@@ -18,6 +25,12 @@ class ProductList(ListView):
 class ProductDetail(DetailView):
     model = Product
     template_name = "eccomerce/product.html"
+
+class CategoryView(View):
+    def get(self,request,value):
+        category = Product.objects.filter(category=value)
+        title = Product.objects.filter(category=value).values('title')
+        return render(request,"eccomerce/category.html",locals())
 
 @login_required
 def add_to_cart(request,slug):
@@ -132,7 +145,15 @@ class CheckoutView(View):
                 billing_address.save()
                 order.billing_address = billing_address
                 order.save()
-                return redirect("checkout")
+                if payment_option == 'S':
+                    return redirect("payment",payment_option = 'stripe')
+                elif payment_option == 'P':
+                    return redirect("payment",payment_option = 'paypal')
+                else:
+                    messages.warning(self.request,"Inavalid payment option")
+                    return redirect("checkout")
+                    
+            
             messages.warning(self.request,"Failed checkout")
             return render(self.request,"eccomerce/Checkout.html")
             # Do something with the form data
@@ -142,8 +163,35 @@ class CheckoutView(View):
             return redirect('order_summary')
         
 class PaymentView(View):
-    def get():
-        return render("eccomerce/payment.html")
+    def get(self,*args, **kwargs):
+        order = Order.objects.get(user=self.request.user,ordered=False)
+        context = {'order':order}
+        return render(self.request,"eccomerce/payment.html",context)
+    def post(self,*args, **kwargs):
+        order = Order.objects.get(user=self.request.user,ordered=False)
+        token = self.request.POST.get('stripeToken')
+        amount = int(order.get_total() * 100)
+
+        charge = stripe.Charge.create(
+            amount = amount,
+            currency = 'USD',
+            source = token
+        )
+        #create payment
+        payment = Payment()
+        payment.stripe_charge_id  = charge.id
+        payment.user = self.request.user
+        payment.amount = amount
+        payment.save()
+
+        order.ordered = True
+        order.payment = payment
+        order.save()
+
+        return redirect("payment_confirmed") 
+
+def successpayment(request): 
+    return render(request,"eccomerce/confirm_payment.html") 
 
 def search_feature(request):
     if request.method == 'POST':
@@ -151,7 +199,7 @@ def search_feature(request):
         search_query = request.POST['search_query']
         # Filter your model by the search query
         if search_query:
-            posts = Product.objects.filter(Q(title__icontains=search_query) | Q(description__icontains=search_query))
+            posts = Product.objects.filter(Q(title__icontains=search_query) | Q(category__icontains=search_query))
         else:
             messages.info(request,"Please enter a search query")
 

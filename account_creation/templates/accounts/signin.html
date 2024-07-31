@@ -1,32 +1,37 @@
 {% extends "eccomerce/base.html" %}
 {% block content %} 
 <div class="text-center">
-    <h1 class="text-dark">Sign Up</h1>
+    <h1 class="text-dark">Sign In</h1>
 </div> 
+<div class="col-sm-6 offset-sm-3">
+    <form method="POST" action="{% url 'account-login' %}" class="shadow p-5">
+        {% csrf_token %}
+        <div class="input-box">
+            <label for="username">Username</label>
+            <span class="icon"><ion-iconname="mail"></ion-iconname></span>
+            <input class="form-control mb-2" type="text" placeholder="Username" name="username" required>   
+        </div>
+        
+        <div class="input-box">
+            <label for="pass1">Password</label>
+            <span class="icon"><ion-iconname="lock-closed"></ion-iconname></span>
+            <input class="form-control" type="password" placeholder="Enter Password" name="pass1" required>
+        </div>
+        <small><a href="{% url 'password-reset' %}">Forgot Password?</a></small>
+        <br>
+        <br>
 
-<form method="POST" action="{% url 'account-login' %}" class="cpx-4 mx-auto text-center">
-    {% csrf_token %}
-
-    <div class="mb-5">
-        <label class="text-dark" for="username">Username</label><br>
-        <input type="text" name="username" class="w-full mt-2 px-4 py-2 rounded-xl" id="username">
-    </div>
-
-    <div class="mb-5">
-        <label class="text-dark" for="password1">Password</label><br>
-        <input type="password" name="password1" class="w-full mt-2 px-4 py-2 rounded-xl" id="password1">
-    </div>
-
-    {% if form.errors %}
-        {% for field in form.errors %}
-            <div class="mb-5 p-4 rounded-xl bg-red-300 text-white">
-                <p>{{ error| escape }}</p>
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <button class="btn btn-primary">Sign In</button>
-
-</form>
-
+        <button class="btn btn-primary">Sign In</button>
+        <div class="text-center fw-bold">
+            <small>Don't have an account? <a href="{% url 'account-signup' %}" class="text-danger">Create One</a></small>
+        </div>
+        {% if form.errors %}
+            {% for field in form.errors %}
+                <div class="mb-5 p-4 rounded-xl bg-red-300 text-white">
+                    <p>{{ error| escape }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </form>
+</div>
 {% endblock content %}

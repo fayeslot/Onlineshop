@@ -1,42 +1,87 @@
-{% extends 'eccomerce/base.html' %}
+{% extends "eccomerce/base.html"%}
 {% block content %}
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">title</th>
-        <th scope="col">quantity</th>
-        <th scope="col">price</th>
-        <th scope="col">total</th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for order_item in order.product.all %}
-          <tr>
-            <th scope="row">{{forloop.counter}}</th>
-            <td>{{order_item.product.title}}</td>
-            <td>{{order_item.quantity}}</td>
-            <td>{{order_item.product.price}}</td>
-            <td>{{order_item.product.price}}</td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="5"> Your Cart is Empty</td>
-          </tr>
-          <tr>
-            <td colspan="5">
-              <a class="btn btn-primary float-right" href="{% url 'products' %}">Continue Shopping</a>
-            </td>
-          </tr>
-        {% endfor %}
-          <tr>
-            <td colspan="5" class="float-left">
-                <a class="btn btn-primary float-right" href="{% url 'products' %}">Continue Shopping</a>
-                <a class="btn btn-warning  ml-5" href="/checkout/">Proceed to Checkout</a>
-                
-            </td>
-          </tr>
-      
-    </tbody>
-  </table>
+
+    <!--Main layout-->
+    <main class=" mt-5 pt-4">
+      <div class="">
+      {% if order %}
+        <div class="d-flex justify-content-between">
+          <div class="card col-sm-6 mx-5">
+            {% for item in order.product.all %}
+            <div class="row ">
+                <!--Grid column-->
+                <div class="col-sm-3 text-center">
+                    <img src="{{item.product.image.url}}" class="img-fluid" alt="{{ item.name }}" />
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-md-6 mb-4">
+                    <!--Content-->
+                    <div class="p-4">
+                        <div class="mb-3">
+                            <a href="{{ item.product.get_absolute_url}}">
+                                <span class="badge bg-dark me-1">{{item.product.title}}</span>
+                            </a>
+                        </div>
+                        {% if item.product.discount_price %}
+                            <strike class="lead"><span>${{item.product.price}}</span></strike>
+                            <p class="lead"><span>${{item.product.discount_price}}</span></p>
+                        {% else %}
+                            <p class="lead"><span>${{item.product.price}}</span></p>
+                        {% endif %}
+
+                        <strong>
+                            <p style="font-size: 20px;">{{item.product.description}}</p>
+                        </strong>
+                        
+                        <div class="my-3">
+                          <!--<h5>Quantity:</h5>-->
+                          <a class="minus-cart btn" pid="{{item.product.id}}" href="{{item.product.remove_item_from_cart }}"><i class="fas fa-minus-square fa-lg"></i></a>
+                          <span id="quantity">{{item.quantity}}</span>
+                          <a class="plus-cart btn" pid="{{item.product.id}}" href="{{item.product.get_add_to_cart_url}}"><i class="fas fa-plus-square fa-lg"></i></a>
+                      </div>
+                    </div>
+                    <hr>
+                </div>
+               
+            </div>
+            
+            {% endfor %}
+          </div> 
+            <div class="col-sm-5 mb-5 px-5 mr-5">
+              <div class="card">
+                  
+                <h3>Total Amount</h3>
+                <ul class="list-group">
+                  {% for order_item in order.product.all %}
+                  <li class="list-group-item d-flex justify-content-between">
+                      <div>
+                          <h6 class="my-0">{{order_item.quantity}} x {{order_item.product.title}}</h6>
+                          
+                      </div>
+                      <span class="text-muted">${{order_item.get_final_price}}</span>
+                  </li>
+                  {% endfor %}
+                  
+                  <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0 py-2">
+                    <div>
+                      <strong>Total</strong><small>(including tax)</small>
+                    </div>
+                    <span id="totalamount"><strong>$. {{order.get_total}}</strong></span>
+                  </li>
+                </ul>
+                <div class="d-grid"><a href="{% url 'checkout' %}" class="btn btn-primary">Place Order</a></div>
+                  
+              </div>
+            </div>
+          </div>
+          {% else %}
+            <h1 class="text-center mb-5">Cart is Empty</h1>
+        </div>
+          {% endif %}
+        </div>
+    </main>
+    <!--Main layout-->
+
 {% endblock content %}

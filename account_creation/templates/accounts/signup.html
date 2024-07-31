@@ -3,23 +3,25 @@
 <div class="text-center">
     <h1 class="text-dark">Sign Up</h1>
 </div> 
+<div class="col-sm-6 offset-sm-3">
+    <form method="POST" action="{% url 'account-signup' %}" class=" shadow p-5">
+        {% csrf_token %}
 
-<form method="POST" action="{% url 'account-signup' %}" class="px-4 mx-auto text-center">
-    {% csrf_token %}
+        {{form.as_p}}
 
-    {{form.as_p}}
-    
+        {% if form.errors %}
+            {% for field in form.errors %}
+                <div class="mb-5 p-4 bg-red-300 text-white">
+                    <p>{{ error| escape }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
 
-    {% if form.errors %}
-        {% for field in form.errors %}
-            <div class="mb-5 p-4 rounded-xl bg-red-300 text-white">
-                <p>{{ error| escape }}</p>
-            </div>
-        {% endfor %}
-    {% endif %}
+        <button class="btn btn-primary">Sign Up</button>
+        <div class="text-center fw-bold">
+            <small>Already have an account? <a href="{% url 'account-login' %}" class="text-danger">Sign In</a></small>
+        </div>
 
-    <button class="btn btn-primary">Sign Up</button>
-
-</form>
-
+    </form>
+</div>
 {% endblock content %}

@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required 
 from django.shortcuts import render,redirect
-from eccommerce.forms import  SignupForm
+from .forms import  LoginForm, SignupForm
 
 # Create your views here.
 def signup(request):
@@ -23,13 +23,13 @@ def signup(request):
 def signin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        password = request.POST.get('password1')
+        password = request.POST.get('pass1')
 
         user = authenticate(username=username,password=password)
 
         if user != None:
             login(request,user)
-            return redirect('products')
+            return redirect("products")
         
         else:
             messages.error(request,"Invalid username or Password")
@@ -38,9 +38,5 @@ def signin(request):
         
     return render(request, "accounts/signin.html")
 
-@login_required
-def signout(request):
-    logout(request)
-    messages.success(request,"You have been logged out")
-    return redirect("account-login")
+
 

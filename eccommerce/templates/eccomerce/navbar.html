@@ -1,7 +1,8 @@
+{% load static %}
 {% load cart_template_tags %}
 <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body fixed-top" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand text-white" href="#">Navbar</a>
+    <img src="{% static 'images/banner/AdobeStock.jpeg' %}" class="navbar-brand text-white" alt="Navbar" width="50" height="50">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -15,12 +16,13 @@
           <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Categories
           </a>
+          
           <div class="dropdown_menu">
-            <ul>
-              <li><a class="dropdown-item" href="#">All</a></li>
-              <li><a class="dropdown-item" href="#">Electronics</a></li>
-              <li><a class="dropdown-item" href="#">Clothes</a></li>
-              <li><a class="dropdown-item" href="#">Shoes</a></li>
+            <ul >
+              <li><a class="dropdown-item" href="{%  url 'category' 'A' %}">All</a></li>
+              <li><a class="dropdown-item" href="{%  url 'category' 'E' %}">Electronics</a></li>
+              <li><a class="dropdown-item" href="{%  url 'category' 'C' %}">Clothes</a></li>
+              <li><a class="dropdown-item" href="{%  url 'category' 'S' %}">Shoes</a></li>
             </ul>
         </div>
         </li>
