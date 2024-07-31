@@ -11,7 +11,7 @@ from eccommerce.forms import CheckoutForm
 from eccommerce.models import Order, OrderItem, Payment, Product, BillingAddress
 
 import stripe
-stripe.api_key = "sk_test_51Pdp9zAgq0KGXf4pUIyUVkqsuwejcTYRkYl4QCeOOiuYwqiXLCrNSbItomDIzI8HIv1rfAvyv72doAtqFBJcKQqF00ijk4p2Sm"
+stripe.api_key = ""
 
 
 
